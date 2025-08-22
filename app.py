@@ -32,7 +32,7 @@ SECRET = os.getenv("SECRET")
 
 @app.before_request
 def check_authentication():
-    protected_paths = ['/account']
+    protected_paths = ['/account','/edit-profile','/change-password']
 
     if request.path in protected_paths:
         
