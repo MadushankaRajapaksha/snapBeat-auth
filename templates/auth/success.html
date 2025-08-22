@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Succes</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='form.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container succes-page">
+        <h1 class="success-title">Success!</h1>
+        <h2 class="success-subtitle">Operation Completed</h2>
+        <p class="success-message">{{ message }}</p>
+        <a href="/account" class="btn btn-primary">Go to Account</a>
+    </div>
+</body>
+</html>

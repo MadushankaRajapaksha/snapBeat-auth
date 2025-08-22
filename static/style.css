@@ -1,0 +1,13 @@
+/* General resets */
+* {
+  padding: 0px;
+  margin: 0px;
+  box-sizing: border-box;
+}
+
+/* Base body style - general for all pages, with emoji font added */
+body {
+    font-family: 'Poppins', 'Arial', sans-serif, "Segoe UI Emoji", "Apple Color Emoji", "Noto Color Emoji", "Segoe UI Symbol", "Android Emoji", "EmojiSymbols";
+    color: #e0e0e0;
+    line-height: 1.6;
+}

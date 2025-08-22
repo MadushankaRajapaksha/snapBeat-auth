@@ -1,0 +1,32 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.pyc
+*.pyd
+*.pyo
+*.egg-info/
+.pytest_cache/
+
+# Distribution / packaging
+.Python
+env/
+venv/
+*.egg
+*.whl
+dist/
+build/
+*.zip
+
+# Editors
+.vscode/
+.idea/
+
+# OS-specific
+.DS_Store
+Thumbs.db
+
+# Project-specific
+database.db
+.env
+
+# Vercel
+.vercel/

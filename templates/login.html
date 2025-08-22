@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SnapBeat Auth - Sign Up</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='form.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body class="form-page">
+    <div class="container">
+        <div class="logo">
+            <h1>🎹 SnapBeat</h1>
+            <p>Authenticate with Your Rhythm</p>
+        </div>
+
+        <form id="loginForm" action="/auth/login" method="POST">
+            <input type="hidden" id="rhythmPattern" name="rhythmPattern">
+            <div class="form-group">
+                <label for="username">Username</label>
+                <input type="text" id="username" name="username" placeholder="Enter your username" required>
+            </div>
+
+          
+
+            <div class="rhythm-section">
+                <h3 class="rhythm-title">🎹 Create Your Rhythm Pattern</h3>
+                
+                <div class="instructions">
+                    <strong>Instructions:</strong> Use the piano keys below or your keyboard (Q,W,E,R,T,Y,U,I) to create a unique rhythm pattern. This will be your musical password!
+                </div>
+
+                <div class="keyboard-container">
+                    <div class="piano-keyboard">
+                        <!-- White keys -->
+                        <div class="white-keys">
+                            <div class="white-key" data-key="Q" data-note="C4">
+                                <div>C4</div>
+                                <div>Q</div>
+                            </div>
+                            <div class="white-key" data-key="E" data-note="D4">
+                                <div>D4</div>
+                                <div>E</div>
+                            </div>
+                            <div class="white-key" data-key="T" data-note="E4">
+                                <div>E4</div>
+                                <div>T</div>
+                            </div>
+                            <div class="white-key" data-key="Y" data-note="F4">
+                                <div>F4</div>
+                                <div>Y</div>
+                            </div>
+                            <div class="white-key" data-key="I" data-note="G4">
+                                <div>G4</div>
+                                <div>I</div>
+                            </div>
+                        </div>
+
+                        <!-- Black keys -->
+                        <div class="black-keys">
+                            <div style="margin-left: 24px;"></div>
+                            <div class="black-key" data-key="W" data-note="C#4">
+                                <div>C#4</div>
+                                <div>W</div>
+                            </div>
+                            <div style="margin-left: 32px;"></div>
+                            <div class="black-key" data-key="R" data-note="D#4">
+                                <div>D#4</div>
+                                <div>R</div>
+                            </div>
+                            <div style="margin-left: 64px;"></div>
+                            <div class="black-key" data-key="U" data-note="F#4">
+                                <div>F#4</div>
+                                <div>U</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="keyboard-instructions">
+                        <p>Press keys or click the piano keys above to create your rhythm</p>
+                        <div class="key-legend">
+                            <span>🎵 White Keys: Q, E, T, Y, I</span>
+                            <span>🎶 Black Keys: W, R, U</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="rhythm-display" id="rhythmDisplay">
+                    Your rhythm pattern will appear here...
+                </div>
+
+                <div class="controls">
+                    <button type="button" class="btn btn-secondary" id="recordBtn">🎤 Start Recording</button>
+                    <button type="button" class="btn btn-secondary" id="playBtn" disabled>▶️ Play Back</button>
+                    <button type="button" class="btn btn-secondary" id="clearBtn">🗑️ Clear</button>
+                </div>
+
+                <div class="status" id="status">Press "Start Recording" to begin creating your rhythm</div>
+            </div>
+
+            <button type="submit" class="btn btn-primary" id="submitBtn" disabled style="width: 100%;">
+                🎵 Login to SnapBeat Account
+            </button>
+        </form>
+        <p class="signup-link">Don't have an account? <a href="/siginup">Sign Up</a></p>
+    </div>
+
+    <script src="{{ url_for('static', filename='login.js') }}"></script>

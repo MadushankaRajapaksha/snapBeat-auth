@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Error</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='form.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container error-page">
+        <h1 class="error-title">Oops!</h1>
+        <h2 class="error-subtitle">An Error Occurred</h2>
+        <p class="error-message">{{ message }}</p>
+        <a href={{naviagte}} class="btn btn-primary">{{ naviagte_msg }}</a>
+    </div>
+</body>
+</html>

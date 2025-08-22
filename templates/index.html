@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SnapBeat Auth - Home</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='landing.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header class="hero">
+        <div class="container">
+            <nav>
+                <div class="logo">
+                    <h1><span>🎹</span> SnapBeat</h1>
+                </div>
+                <ul class="nav-links">
+                    <li><a href="/">Home</a></li>
+                    <li><a href="/login">Login</a></li>
+                    <li><a href="/siginup">Sign Up</a></li>
+                    <li><a href="/account">Account</a></li>
+                </ul>
+            </nav>
+            <div class="hero-content">
+                <h1>Unlock Your World with Rhythm</h1>
+                <p>Experience a new era of secure and intuitive authentication. Your unique rhythm is your key.</p>
+                <div class="hero-buttons">
+                    <a href="/siginup" class="btn btn-primary">Get Started</a>
+                    <a href="#features" class="btn btn-secondary">Learn More</a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <section id="features" class="features-section">
+        <div class="container">
+            <h2>Why Choose SnapBeat?</h2>
+            <div class="feature-grid">
+                <div class="feature-item">
+                    <h3>Unique Authentication</h3>
+                    <p>Your rhythm pattern is as unique as your fingerprint, providing a highly personalized security layer.</p>
+                </div>
+                <div class="feature-item">
+                    <h3>Enhanced Security</h3>
+                    <p>Beyond traditional passwords, rhythm-based authentication adds a complex, hard-to-guess dimension to your security.</p>
+                </div>
+                <div class="feature-item">
+                    <h3>Intuitive & Fun</h3>
+                    <p>Say goodbye to forgotten passwords. Log in with a memorable and enjoyable musical sequence.</p>
+                </div>
+                <div class="feature-item">
+                    <h3>Seamless Integration</h3>
+                    <p>Easily integrate SnapBeat into your existing systems for a modern and secure user experience.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="cta-section">
+        <div class="container">
+            <h2>Ready to Harmonize Your Security?</h2>
+            <p>Join SnapBeat today and transform the way you authenticate.</p>
+            <a href="/siginup" class="btn btn-primary">Create Your Rhythm Account</a>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 SnapBeat. All rights reserved.</p>
+        </div>
+    </footer>
+</body>
+</html>

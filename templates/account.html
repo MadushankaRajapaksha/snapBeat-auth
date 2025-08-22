@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SnapBeat Account</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='form.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+    </style>
+</head>
+<body class="form-page">
+    <div class="container">
+        <div class="logo">
+            <h1>🎹 SnapBeat</h1>
+            <p>Your Account Dashboard</p>
+        </div>
+
+        <div class="account-details">
+            <h2>Welcome, {{ username }}!</h2>
+            <p>This is your personalized SnapBeat account page. Here you can manage your profile and settings, and explore your rhythm patterns.</p>
+            
+            <div class="profile-section">
+                <h3>Your Profile Information</h3>
+                <div class="profile-item">
+                    <span>Username:</span>
+                    <span>{{ username }}</span>
+                </div>
+                <div class="profile-item">
+                    <span>Email:</span>
+                    <span>{{ email }}</span>
+                </div>
+                
+            </div>
+
+         
+        </div>
+
+        <div class="controls">
+            <a href="/logout" class="btn btn-primary">Logout</a>
+            <a href="/change-password" class="btn btn-secondary">Change Password</a>
+            <a href="/edit-profile" class="btn btn-secondary">Edit Profile</a>
+        </div>
+
+        <div class="footer-links">
+            <a href="#">Privacy Policy</a>
+            <a href="#">Terms of Service</a>
+            <a href="#">Support</a>
+        </div>
+    </div>
+</body>
+</html>
