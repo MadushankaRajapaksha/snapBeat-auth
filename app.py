@@ -5,7 +5,6 @@ import bcrypt
 from core.db import Database
 import jwt
 from dotenv import load_dotenv
-import shutil
 
 load_dotenv()
 
