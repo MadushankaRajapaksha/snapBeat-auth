@@ -43,7 +43,13 @@ class Database:
             con.commit()
 
     def get_db_connection(self):
-        return sqlite3.connect(self.db_path, check_same_thread=False)
+        conn = sqlite3.connect(self.db_path, check_same_thread=False)
+        # Ensure the database schema is initialized for every connection
+        # This helps in ephemeral environments where the DB might be new
+        cur = conn.cursor()
+        cur.execute(self.user_table_create_query)
+        conn.commit()
+        return conn
 
     def add_user(self, username, email, hashed_password):
         with self.lock:
