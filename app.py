@@ -54,9 +54,9 @@ def check_authentication():
 def index():
     return render_template("index.html")
 
-@app.route("/siginup")
-def siginup_page():
-    return render_template("siginup.html")
+@app.route("/signup")
+def signup_page():
+    return render_template("signup.html")
 
 
 @app.route("/login")
@@ -80,17 +80,17 @@ def account_page():
             response.headers["Content-Type"] = "text/html; charset=utf-8"
             return response
         except jwt.ExpiredSignatureError:
-            return redirect(url_for('login'))
+            return redirect(url_for('login_page'))
         except jwt.InvalidTokenError:
-            return redirect(url_for('login'))
-    return redirect(url_for('login'))
+            return redirect(url_for('login_page'))
+    return redirect(url_for('login_page'))
  
 
 # Backend
  
 
-@app.route("/auth/signup", methods=["POST","GET"])
-def siginup():
+@app.route("/auth/signup", methods=["POST"])
+def signup():
  
     username = request.form["username"]
     email = request.form["email"]
@@ -124,7 +124,7 @@ def siginup():
     
     if db_res is None:
         # //retun erro page with say user a leard exists
-        return render_template("auth/err.html", message="User already exist", naviagte= "/siginup",naviagte_msg = "please Retry")
+        return render_template("auth/err.html", message="User already exist", naviagte= "/signup",naviagte_msg = "please Retry")
     if db_res:
         # create jwt token 
         token = jwt.encode({"id":db_res[0],"username":db_res[1]},SECRET,algorithm="HS256")
@@ -135,16 +135,16 @@ def siginup():
         # return a page show suuce registrayon and redirect to /acc  page 
         return res
     else:
-        return render_template("auth/err.html", message="User didn't create, please try again." , naviagte= "/siginup",naviagte_msg = "please Retry")
+        return render_template("auth/err.html", message="User didn't create, please try again." , naviagte= "/signup",naviagte_msg = "please Retry")
 
-@app.route("/auth/login",methods=["POST","GET"])
+@app.route("/auth/login",methods=["POST"])
 def login():
     
     username = request.form["username"]
     rhythm_pattern_str = request.form.get("rhythmPattern")
 
     if not rhythm_pattern_str:
-        return render_template("auth/err.html", message="Password is Missing", naviagte= "login",naviagte_msg = "Retry")
+        return render_template("auth/err.html", message="Password is Missing", naviagte= url_for('login_page'),naviagte_msg = "Retry")
         
 
     try:
@@ -164,7 +164,7 @@ def login():
     
     if db_user:
          
-        stored_hashed_password = db_user[3] # Assuming hashed password is at index 2
+        stored_hashed_password = db_user[3] # Hashed password is at index 3
         
         
         if isinstance(stored_hashed_password, str):
@@ -210,7 +210,7 @@ def edit_profile_page():
             new_username = request.form["username"]
             new_email = request.form["email"]
 
-            db.update_user(user_id, new_username, new_email)
+            db.update_user_without_password(user_id, new_username, new_email)
             
 
              

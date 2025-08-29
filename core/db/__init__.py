@@ -31,13 +31,6 @@ class Database:
     def get_db_connection(self):
         return sqlite3.connect(self.db_path, check_same_thread=False)
 
-    def _user_already_exist(self, username):
-        with self.get_db_connection() as con:
-            cur = con.cursor()
-            cur.execute("SELECT * FROM users WHERE username=?", (username,))
-            user = cur.fetchone()
-            return user is not None
-
     def add_user(self, username, email, hashed_password):
         with self.lock:
             with self.get_db_connection() as con:
