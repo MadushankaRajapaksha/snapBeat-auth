@@ -49,12 +49,10 @@ class Database:
                     return None # User already exists (due to UNIQUE constraint)
 
     def get_user_by_id(self, id):
-        print(f"Getting user by id: {id} (type: {type(id)})")
         with self.get_db_connection() as con:
             cur = con.cursor()
             cur.execute("SELECT * FROM users WHERE id=?", (id,))
             user = cur.fetchone()
-            print(f"Found user: {user}")
             return user
 
     def update_user_password(self, user_id, hashed_password):

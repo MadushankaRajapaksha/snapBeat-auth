@@ -1,5 +1,5 @@
 import os
-from flask import Flask,render_template, request, jsonify,make_response,redirect,url_for
+from flask import Flask,render_template, request, jsonify,make_response,redirect,url_for, g
 import json
 import bcrypt
 from core.db import Database
@@ -23,21 +23,21 @@ SECRET = os.getenv("SECRET")
 @app.before_request
 def check_authentication():
     protected_paths = ['/account','/edit-profile','/change-password']
+    g.user = None
+    token = request.cookies.get('token')
 
-    if request.path in protected_paths:
-        
-        token = request.cookies.get('token')
-        
-        if token: # Ensure token exists before decoding
-            try:
-                # token validate is valid 
-                user_data = jwt.decode(token.encode('utf-8'), SECRET, algorithms=["HS256"])  # Verify token without expiration check
-            except jwt.exceptions.DecodeError:
-                return redirect(url_for('login_page')) # Redirect to login if token is invalid
-        else:
-            return redirect(url_for('login_page')) # Redirect to login if no token is found
-        if not user_data: # Simplified check for user_data
-            return redirect(url_for('login_page'))
+    if token:
+        try:
+            user_data = jwt.decode(token.encode('utf-8'), SECRET, algorithms=["HS256"])
+            g.user = db.get_user_by_id(user_data['id'])
+        except (jwt.exceptions.DecodeError, KeyError):
+            # Invalid token or missing 'id'
+            pass
+
+    if request.path in protected_paths and not g.user:
+        res = make_response(redirect(url_for('login_page')))
+        res.delete_cookie("token")
+        return res
           
           
 @app.route("/")
@@ -56,23 +56,10 @@ def login_page():
 
 @app.route("/account")
 def account_page():
-    token = request.cookies.get('token')
-    if token:
-        try:
-            user_data = jwt.decode(token, SECRET, algorithms=["HS256"])
-            username = user_data.get('username')
-            user_id = user_data.get('id')
-          
-            user_details = db.get_user_by_id(user_id)
-            email = user_details[2] if user_details else "N/A" # Assuming email is at index 2
-            
-            response = make_response(render_template("account.html", username=username, email=email))
-            response.headers["Content-Type"] = "text/html; charset=utf-8"
-            return response
-        except jwt.ExpiredSignatureError:
-            return redirect(url_for('login_page'))
-        except jwt.InvalidTokenError:
-            return redirect(url_for('login_page'))
+    if g.user:
+        response = make_response(render_template("account.html", username=g.user[1], email=g.user[2]))
+        response.headers["Content-Type"] = "text/html; charset=utf-8"
+        return response
     return redirect(url_for('login_page'))
  
 
@@ -179,47 +166,29 @@ def logout():
 
 @app.route("/edit-profile", methods=["GET", "POST"])
 def edit_profile_page():
-    token = request.cookies.get('token')
-    if not token:
+    if not g.user:
         return redirect(url_for('login_page'))
 
-    try:
-        user_data = jwt.decode(token, SECRET, algorithms=["HS256"])
-        user_id = user_data.get('id')
-        user_details = db.get_user_by_id(user_id)
+    if request.method == "POST":
+        new_username = request.form["username"]
+        new_email = request.form["email"]
 
-        if not user_details:
-            return render_template("auth/err.html", message="User not found.", naviagte="/account", naviagte_msg="Back to Account")
+        db.update_user_without_password(g.user[0], new_username, new_email)
+        
+        # Update the token with new username if it changed
+        if new_username != g.user[1]:
+            updated_token = jwt.encode({"id": g.user[0], "username": new_username}, SECRET, algorithm="HS256")
+            res = make_response(redirect(url_for('account_page')))
+            res.set_cookie("token", updated_token)
+            return res
 
-        user = {
-            "username": user_details[1],
-            "email": user_details[2]
-        }
+        return redirect(url_for('account_page'))
 
-        if request.method == "POST":
-            new_username = request.form["username"]
-            new_email = request.form["email"]
-
-            db.update_user_without_password(user_id, new_username, new_email)
-            
-
-             
-            
-            # Update the token with new username if it changed
-            if new_username != user["username"]:
-                updated_token = jwt.encode({"id": user_id, "username": new_username}, SECRET, algorithm="HS256")
-                res = make_response(redirect(url_for('account_page')))
-                res.set_cookie("token", updated_token)
-                return res
-
-            return redirect(url_for('account_page'))
-
-        return render_template("edit-profile.html", user=user)
-
-    except jwt.ExpiredSignatureError:
-        return redirect(url_for('login_page'))
-    except jwt.InvalidTokenError:
-        return redirect(url_for('login_page'))
+    user = {
+        "username": g.user[1],
+        "email": g.user[2]
+    }
+    return render_template("edit-profile.html", user=user)
 
 @app.route("/change-password", methods=["GET", "POST"])
 def change_password():
