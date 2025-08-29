@@ -10,7 +10,8 @@
 <body class="form-page">
     <div class="container">
         <h2>Edit Profile</h2>
-        <form action="/edit-profile" method="POST">
+        <div id="statusMessage" class="status-message"></div>
+        <form id="editProfileForm" action="/edit-profile" method="POST">
             <div class="form-group">
                 <label for="username">Username:</label>
                 <input type="text" id="username" name="username" value="{{ user.username }}" required>
@@ -24,5 +25,48 @@
         </form>
         <p><a href="/account">Back to Account</a></p>
     </div>
+
+    <script>
+        document.getElementById('editProfileForm').addEventListener('submit', async function(event) {
+            event.preventDefault(); // Prevent default form submission
+
+            const form = event.target;
+            const formData = new FormData(form);
+            const statusMessage = document.getElementById('statusMessage');
+
+            statusMessage.textContent = 'Saving changes...';
+            statusMessage.className = 'status-message info';
+
+            try {
+                const response = await fetch(form.action, {
+                    method: form.method,
+                    body: formData
+                });
+
+                const result = await response.json();
+
+                if (response.ok) {
+                    statusMessage.textContent = result.message;
+                    statusMessage.className = 'status-message success';
+                    // Optionally update the displayed username/email on the page
+                    // if the user is still on this page and not redirected
+                    document.getElementById('username').value = formData.get('username');
+                    document.getElementById('email').value = formData.get('email');
+
+                    // If the username changed, the token might have been updated,
+                    // so a redirect to account page might still be desired to refresh the cookie.
+                    // For real-time, we'll assume the cookie is handled by the server.
+                    // If the server sends a new token, the browser will update it.
+                } else {
+                    statusMessage.textContent = result.message || 'An error occurred.';
+                    statusMessage.className = 'status-message error';
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                statusMessage.textContent = 'Network error or server unreachable.';
+                statusMessage.className = 'status-message error';
+            }
+        });
+    </script>
 </body>
 </html>

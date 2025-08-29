@@ -284,13 +284,19 @@ document.addEventListener('DOMContentLoaded', function() {
     changePasswordForm.addEventListener('submit', async function(e) {
         e.preventDefault();
 
+        const statusMessage = document.getElementById('statusMessage');
+
         if (oldRhythmPattern.length < 3 || newRhythmPattern.length < 3) {
-            alert('Please record both old and new rhythm patterns (at least 3 beats each).');
+            statusMessage.textContent = 'Please record both old and new rhythm patterns (at least 3 beats each).';
+            statusMessage.className = 'status-message error';
             return;
         }
 
         document.getElementById('oldRhythmPattern').value = JSON.stringify(oldRhythmPattern);
         document.getElementById('newRhythmPattern').value = JSON.stringify(newRhythmPattern);
+
+        statusMessage.textContent = 'Changing password...';
+        statusMessage.className = 'status-message info';
 
         try {
             const response = await fetch('/change-password', {
@@ -307,15 +313,20 @@ document.addEventListener('DOMContentLoaded', function() {
             const result = await response.json();
 
             if (response.ok) {
-                alert(result.message);
-                
-                window.location.href = '/login';  
+                statusMessage.textContent = result.message;
+                statusMessage.className = 'status-message success';
+                // Redirect to login page after a short delay
+                setTimeout(() => {
+                    window.location.href = '/login';
+                }, 2000); // Redirect after 2 seconds
             } else {
-                alert(result.message || 'An error occurred.');
+                statusMessage.textContent = result.message || 'An error occurred.';
+                statusMessage.className = 'status-message error';
             }
         } catch (error) {
             console.error('Error:', error);
-            alert('An unexpected error occurred. Please try again.');
+            statusMessage.textContent = 'Network error or server unreachable.';
+            statusMessage.className = 'status-message error';
         }
     });
 });

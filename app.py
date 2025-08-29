@@ -166,6 +166,8 @@ def logout():
 @app.route("/edit-profile", methods=["GET", "POST"])
 def edit_profile_page():
     if not g.user:
+        if request.method == "POST":
+            return jsonify({"message": "Unauthorized"}), 401
         return redirect(url_for('login_page'))
 
     if request.method == "POST":
@@ -174,14 +176,17 @@ def edit_profile_page():
 
         db.update_user_without_password(g.user[0], new_username, new_email)
         
+        response_message = "Profile updated successfully!"
+        response_status = 200
+
         # Update the token with new username if it changed
         if new_username != g.user[1]:
             updated_token = jwt.encode({"id": g.user[0], "username": new_username}, SECRET, algorithm="HS256")
-            res = make_response(redirect(url_for('account_page')))
+            res = make_response(jsonify({"message": response_message}))
             res.set_cookie("token", updated_token)
-            return res
+            return res, response_status
 
-        return redirect(url_for('account_page'))
+        return jsonify({"message": response_message}), response_status
 
     user = {
         "username": g.user[1],
