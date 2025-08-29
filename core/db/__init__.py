@@ -2,7 +2,10 @@ import os
 import sqlite3
 import bcrypt
 import threading # Added threading for lock
+import shutil # Added shutil for file operations
+from dotenv import load_dotenv
 
+load_dotenv()
 class Database:
     def __init__(self):
         self.user_table_create_query = """
@@ -15,11 +18,18 @@ class Database:
         """
         self.lock = threading.Lock() # Initialize lock
 
-        if os.getenv("VERCEL") == "1":
-            # Use writable path on Vercel
-            tmp_dir = "/tmp"
-            os.makedirs(tmp_dir, exist_ok=True)
-            self.db_path = os.path.join(tmp_dir, "database.db")
+        if os.getenv("VERCEL") == "1" or os.getenv("VERCEL") == 1:
+            # Define the path for the writable database in /tmp
+            tmp_db_path = "/tmp/database.db"
+            # Ensure /tmp directory exists
+            os.makedirs(os.path.dirname(tmp_db_path), exist_ok=True)
+
+            # Check if a database.db exists in the root (deployed static file)
+            # and copy it to /tmp if /tmp/database.db doesn't exist yet
+            if not os.path.exists(tmp_db_path) and os.path.exists("database.db"):
+                shutil.copy("database.db", tmp_db_path)
+            
+            self.db_path = tmp_db_path
         else:
             # Use local path for development
             self.db_path = "database.db"
