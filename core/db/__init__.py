@@ -15,10 +15,14 @@ class Database:
         """
         self.lock = threading.Lock() # Initialize lock
 
-        # Use writable path on Vercel
-        tmp_dir = "/tmp"
-        os.makedirs(tmp_dir, exist_ok=True)
-        self.db_path = os.path.join(tmp_dir, "database.db")
+        if os.getenv("VERCEL") == "1":
+            # Use writable path on Vercel
+            tmp_dir = "/tmp"
+            os.makedirs(tmp_dir, exist_ok=True)
+            self.db_path = os.path.join(tmp_dir, "database.db")
+        else:
+            # Use local path for development
+            self.db_path = "database.db"
 
         self.init_db()
 

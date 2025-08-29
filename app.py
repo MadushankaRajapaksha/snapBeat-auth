@@ -11,16 +11,6 @@ load_dotenv()
 
 app = Flask(__name__, template_folder="templates")
 
-# Check if running on Vercel and DATABASE_URL is not set (meaning using SQLite)
-if os.getenv("VERCEL") == "1" and not os.getenv("DATABASE_URL"):
-    # Define the path for the writable database in /tmp
-    temp_db_path = "/tmp/databse.db"
-    # Copy the database from the deployment to the writable /tmp directory
-    if not os.path.exists(temp_db_path):
-        shutil.copy("databse.db", temp_db_path)
-    # Set the environment variable for the Database class to use the /tmp path
-    os.environ["SQLITE_DB_PATH"] = temp_db_path
-
 db = Database()
 
 SECRET = os.getenv("SECRET")
